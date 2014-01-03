@@ -79,27 +79,6 @@ var Sandbox = {
             }
         },
 
-        // nextCourse: function(item) {
-//             var history = this.get('history');
-
-//             // Tidy up the item's result
-//             if (_.isString(item.result)) item.result = '\"' + item.result.toString().replace(/"/g, '\\"') + '\"';
-//             if (_.isFunction(item.result)) item.result = item.result.toString().replace(/"/g, '\\"');
-// in            if (_.isObject(item.result)) item.result = this.stringify(item.result).replace(/"/g, '\\"');
-//             if (_.isUndefined(item.result)) item.result = "undefined";
-
-//             item.prompt = read_current_cursor()['prompt']
-//             // Add the command and result to the history
-//             history.push(item);
-
-//             // Update the history state and save the model
-//             this.set({ history : history }).change();
-//             this.save();
-
-//             return this;
-//         }
-        // ,
-        
         // Adds a new item to the history
         addHistory: function(item) {
             var history = this.get('history');
@@ -217,6 +196,7 @@ var Sandbox = {
 
             // Render the textarea
             this.render();
+            console.log("init");
         },
 
         // The templating functions for the View and each history item
@@ -245,7 +225,8 @@ var Sandbox = {
                         _class : command._class,
                         command : this.toEscaped(command.command),
                         result :  this.toEscaped(command.result),
-                        prompt : this.toEscaped(command.prompt)
+                        prompt : this.toEscaped(command.prompt),
+                        is_prompt : true
                     });
                 }, "", this)
             );
