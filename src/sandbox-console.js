@@ -295,6 +295,29 @@ var Sandbox = {
             return false;
         },
 
+        addModelEntry: function(f) {
+            var val = this.textarea.val();
+
+            // If shift is down, do a carriage return
+            if ( this.ctrl ) {
+                this.currentHistory = val + "\n";
+                this.update();
+                return false;
+            }
+
+            // If submitting a command, set the currentHistory to blank (empties the textarea on update)
+            this.currentHistory = "";
+
+            //Call the function to handle the event.
+            f();
+
+
+            // Update the View's history state to reflect the latest history item
+            this.historyState = this.model.get('history').length;
+
+            return false;
+        },
+
         // The keydown handler, that controls all the input
         keydown: function(e) {
             // Register shift, control and alt keydown
@@ -303,29 +326,16 @@ var Sandbox = {
             // Enter submits the command
             if (e.which === 13) {
                 e.preventDefault();
-                var val = this.textarea.val();
+                f = function() {
+                    // Run the command past the special commands to check for ':help' and ':clear' etc.
+                    var val = this.textarea.val();
+                    if ( !this.specialCommands( val ) ) {
 
-                // If shift is down, do a carriage return
-                if ( this.ctrl ) {
-                    this.currentHistory = val + "\n";
-                    this.update();
-                    return false;
+                        // If if wasn't a special command, pass off to the Sandbox Model to evaluate and save
+                        this.model.evaluate( val );
+                    }
                 }
-
-                // If submitting a command, set the currentHistory to blank (empties the textarea on update)
-                this.currentHistory = "";
-
-                // Run the command past the special commands to check for ':help' and ':clear' etc.
-                if ( !this.specialCommands( val ) ) {
-
-                    // If if wasn't a special command, pass off to the Sandbox Model to evaluate and save
-                    this.model.evaluate( val );
-                }
-
-                // Update the View's history state to reflect the latest history item
-                this.historyState = this.model.get('history').length;
-
-                return false;
+                this.addModelEntry(f)
             }
 
             // Up / down keys cycle through past history or move up/down
