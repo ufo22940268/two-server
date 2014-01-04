@@ -94,11 +94,11 @@
 			gui.name('Commands to try out');
 			gui.close();
 
-			$(gui.domElement).css({
-				position:"absolute",
-				top:0,
-				right:-10
-			}).appendTo('body');
+			<!-- $(gui.domElement).css({ -->
+			<!-- 	position:"absolute", -->
+			<!-- 	top:0, -->
+			<!-- 	right:-10 -->
+			<!-- }).appendTo('body'); -->
 
 			// Some custom callback functions for dat.gui:
 			sandbox.custom1 = function() {  sandbox.currentHistory = ":help"; sandbox.update(); sandbox.textarea.focus(); };

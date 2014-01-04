@@ -31,7 +31,7 @@ function fourth_validator(item) {
     return item._class == "number"
 }
 
-current_course_index = 3;
+current_course_index = 0;
 
 function validate(item) {
     return get_validator()(item)
@@ -67,7 +67,7 @@ courses = [
         hint: '',
     },
     {
-        prompt: '联系结束',
+        prompt: '练习结束',
         validator: fourth_validator,
         hint: '',
     }
@@ -263,7 +263,7 @@ Sandbox = {
             // Set up the View Options
             this.resultPrefix = opts.resultPrefix || "  => ";
             this.tabCharacter = opts.tabCharacter || "\t";
-            this.placeholder = opts.placeholder || "// type some javascript and hit enter (:help for info)";
+            this.placeholder = opts.placeholder || "";
             this.helpText = opts.helpText || "type javascript commands into the console, hit enter to evaluate. \n[up/down] to scroll through history, ':clear' to reset it. \n[alt + return/up/down] for returns and multi-line editing.";
 
             // Bind to the model's change event to update the View
