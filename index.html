@@ -48,7 +48,7 @@
 	<!-- The command/result template (NB whitespace/line breaks matter inside <pre> tag): -->
 	<script type="text/template" id="tplCommand"><% if (! _hidden) { %> <% if (!is_prompt) { %> <span class="command"><%= command %></span>
 <span class="prefix"><%= this.resultPrefix %></span><span class="<%= _class %>"><%= result %></span>
-<!-- <span><%= hint %></span> -->
+<span><%= hint %></span>
 <% } else { %> <span class="wordwrap"><%= prompt%></span> <% } %>
 <% } %></script>
 

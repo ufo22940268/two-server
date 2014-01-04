@@ -12,17 +12,29 @@ var Sandbox;
 
 function first_validator(item) {
     if (item._class == "string") {
-        var user_name = item.result
+        user_name = item.result
         return true
     }
     
     return false
 }
 
-current_course_index = 0;
+function second_validator(item) {
+    return item._class == "number"
+}
+
+function third_validator(item) {
+    return item._class == "number" && item.result == "454"
+}
+
+function fourth_validator(item) {
+    return item._class == "number"
+}
+
+current_course_index = 3;
 
 function validate(item) {
-    return get_validator(item)
+    return get_validator()(item)
 }
 
 function get_validator() {
@@ -40,9 +52,24 @@ courses = [
         hint: '哦偶，再试试。检查一下，名字需要要引号括住！'
     },
     {
-        prompt: 'hello',
-        validator: first_validator,
-        hint: '哦偶，再试试。检查一下，名字需要要引号括住！',
+        prompt: '真棒！想知道你的名字有多长吗？跟之前一样把名字用引号括起来，并在最后加上.length，然后按下回车键（以后都记得要按回车键）。\n 比如我，就会输入”Wang”.length',
+        validator: second_validator,
+        hint: '',
+    },
+    {
+        prompt: '非常好！接下来我们做点数学题。你可以通过编程来进行数学运算！\n 要想计算132加322的结果，直接输入132+322',
+        validator: third_validator,
+        hint: '出错了！检查一下你输入的表达式是否与教程中的一样！',
+    },
+    {
+        prompt: '看到了吧，你可以使用命令行做一些基本的数学运算。多试试看看。\n 如果需要的话，你可以用 * 来做乘法，用 / 来做除法。\n 再输入一个有效的等式来结束这个练习。',
+        validator: fourth_validator,
+        hint: '',
+    },
+    {
+        prompt: '联系结束',
+        validator: fourth_validator,
+        hint: '',
     }
 ]
 
