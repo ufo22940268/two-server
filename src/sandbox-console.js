@@ -5,18 +5,52 @@
  *
  * http://josscrowcroft.github.com/javascript-sandbox-console/
  */
+var user_name;
+var current_course_index;
+var courses;
+var Sandbox;
 
-var current_course_index = 0;
-var courses = [
+function first_validator(item) {
+    if (item._class == "string") {
+        var user_name = item.result
+        return true
+    }
+    
+    return false
+}
+
+current_course_index = 0;
+
+function validate(item) {
+    return get_validator(item)
+}
+
+function get_validator() {
+    return courses[current_course_index]['validator']
+}
+
+function get_hint() {
+    return courses[current_course_index]['hint']    
+}
+
+courses = [
     {
-        prompt: '嗨！我们来认识下吧。你叫什么名字？\n 输入你的名字并用引号括住，就像这样"Wang"，然后按下键盘上的回车键，也就是Enter键。请注意，编写程序时输入的符号都是英文符号！'
+        prompt: '嗨！我们来认识下吧。你叫什么名字？ 输入你的名字并用引号括住，就像这样"Wang"，然后按下键盘上的回车键，也就是Enter键。请注意，编写程序时输入的符号都是英文符号！',
+        validator: first_validator,
+        hint: '哦偶，再试试。检查一下，名字需要要引号括住！'
+    },
+    {
+        prompt: 'hello',
+        validator: first_validator,
+        hint: '哦偶，再试试。检查一下，名字需要要引号括住！',
     }
 ]
-function read_current_cursor() {
+
+function get_current_cursor() {
     return courses[current_course_index]
 }
 
-var Sandbox = {
+Sandbox = {
 
     /**
      * The Sandbox.Model
@@ -79,6 +113,21 @@ var Sandbox = {
             }
         },
 
+        showPrompt: function() {
+            item = {}
+            var history = this.get('history');
+
+            item.prompt = get_current_cursor()['prompt']
+            item.is_prompt = true
+            // Add the command and result to the history
+            history.push(item);
+            // Update the history state and save the model
+            this.set({ history : history }).change();
+            this.save();
+
+            return this;
+        },
+        
         // Adds a new item to the history
         addHistory: function(item) {
             var history = this.get('history');
@@ -89,7 +138,9 @@ var Sandbox = {
             if (_.isObject(item.result)) item.result = this.stringify(item.result).replace(/"/g, '\\"');
             if (_.isUndefined(item.result)) item.result = "undefined";
 
-            item.prompt = read_current_cursor()['prompt']
+            if (!validate(item)) {
+                item.hint = get_hint()
+            }
             // Add the command and result to the history
             history.push(item);
 
@@ -155,7 +206,15 @@ var Sandbox = {
             }
 
             // Add the item to the history
-            return this.addHistory(item);
+            history =  this.addHistory(item);
+            
+            //If it's a valid output, then compare the output with validator.
+            if (item._class != "error" && validate(item)) {
+                current_course_index += 1
+                this.showPrompt()  
+            }
+
+            return history
         }
     }),
 
@@ -197,6 +256,29 @@ var Sandbox = {
             // Render the textarea
             this.render();
             console.log("init");
+
+            this.initEntry();
+        },
+
+        initEntry: function() {
+            var val = this.textarea.val();
+
+            // If shift is down, do a carriage return
+            if ( this.ctrl ) {
+                this.currentHistory = val + "\n";
+                this.update();
+                return false;
+            }
+
+            // If submitting a command, set the currentHistory to blank (empties the textarea on update)
+            this.currentHistory = "";
+
+            this.model.showPrompt()
+            // Update the View's history state to reflect the latest history item
+            this.historyState = this.model.get('history').length;
+
+            return false;
+
         },
 
         // The templating functions for the View and each history item
@@ -226,7 +308,8 @@ var Sandbox = {
                         command : this.toEscaped(command.command),
                         result :  this.toEscaped(command.result),
                         prompt : this.toEscaped(command.prompt),
-                        is_prompt : true
+                        is_prompt : true ? command.is_prompt : false,
+                        hint: command.hint,
                     });
                 }, "", this)
             );
