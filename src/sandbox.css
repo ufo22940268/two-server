@@ -28,7 +28,7 @@
 	   -moz-border-radius: 10px;
 	        border-radius: 10px;
 	max-width:640px;
-	margin:30px auto;
+	margin:0px 0px;
 }
 #sandbox pre.output {
 	display:block;
