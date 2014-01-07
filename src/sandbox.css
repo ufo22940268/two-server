@@ -28,7 +28,7 @@
 	   -moz-border-radius: 10px;
 	        border-radius: 10px;
 	max-width:640px;
-	margin:0px 0px;
+	margin:30px auto;
 }
 #sandbox pre.output {
 	display:block;
@@ -56,7 +56,7 @@
 #sandbox .input:before {
 	content:">";
 	position:absolute;
-	top: 1px;
+	top: 6px;
 	left: 0;
 	color:#ddd
 }
